@@ -1,3 +1,9 @@
+/**
+ * ESERCIZIO 2
+ * Determinare se l'architettura è little endian o 
+ * big endian. Scrivere poi una funzione che inverte 
+ * l'ordine dei dati in una variabile int a 32 bit.
+*/
 
 #include <stdint.h>
 
@@ -11,12 +17,11 @@ void endianness(){
 }
 
 int main(){
-    uint16_t i = 260;
+    uint16_t i = 0x0102;   // unsigned short
     uint16_t* p = &i;
     uint8_t* c = (uint8_t*)&i;
 
-    printf("%s\n","uint16_t i = 260;");
-    printf("i:\t%lx\n",i);
+    printf("uint16_t i = 0x%lx;\n",i);
     printf("\n","");
 
     printf("%s\n","uint16_t* p = &i;");
