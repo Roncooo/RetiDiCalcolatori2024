@@ -1,5 +1,7 @@
 #include <stdio.h>
-int main()
+#include <stdint.h>
+
+int main1()
 {
     short int c; // occupa due byte
     short int *p = &c;
@@ -10,4 +12,6 @@ int main()
     *p = 90;
     printf("%c\n", c);  // Z
     *(p + 1) = 0x20;
+    return 0;
 }
+

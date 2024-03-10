@@ -2,4 +2,3 @@
 /build
 /output
 *.exe
-!/.vscode/tasks.json

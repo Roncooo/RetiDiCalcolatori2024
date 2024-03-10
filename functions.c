@@ -1,6 +1,4 @@
 #include <stdint.h>
-#include "functions.h"
-
 /*
 TYPE        DIMENSION (byte)            stdint.h
 char		1				            int8_t
@@ -47,6 +45,7 @@ uint8_t* binaryString(void* ptr, uint16_t nbytes){
     str[nbit] = 0;    // terminator
     return str;
 }
+
 
 void main(){
     uint16_t i = 0x0001;
