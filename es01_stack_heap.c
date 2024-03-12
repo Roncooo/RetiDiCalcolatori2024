@@ -13,8 +13,8 @@
 
 short int global1 = 2;
 short int global2 = 3;
-short int uglobal1 = 4;
-short int uglobal2 = 5;
+short int uglobal1;
+short int uglobal2;
 
 void func(int i);
 void* fine_heap();
