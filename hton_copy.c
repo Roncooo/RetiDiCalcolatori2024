@@ -12,6 +12,17 @@ char is_big_endian(){
 }
 
 
+uint32_t my_htonl(uint32_t host_long){
+
+        if(is_big_endian())
+                return host_long;
+
+        uint32_t net_long = (host_long>>16) + (host_long<<16);
+
+        return net_long;
+
+}
+
 uint16_t my_htons(uint16_t host_short){
 
         if(is_big_endian())
@@ -19,24 +30,6 @@ uint16_t my_htons(uint16_t host_short){
 
         uint16_t net_short = ((host_short&0xff00)>>8) + ((host_short&0x00ff)<<8);
         return net_short;
-}
-
-
-uint32_t my_htonl(uint32_t host_long){
-
-        if(is_big_endian())
-                return host_long;
-	
-	uint16_t least = *((uint16_t *) &host_long );
-	uint16_t most = *(((uint16_t *) &host_long)+1);
-
-	least = my_htons(least);
-	most = my_htons(most);
-
-        uint32_t net_long = (least<<16) + most;
-
-        return net_long;
-
 }
 
 
