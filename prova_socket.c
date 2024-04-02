@@ -6,7 +6,8 @@
 int main(){
 	int s;
 	int t;
-	char response[1000];
+	int i;
+	char response[100000];
 	struct sockaddr_in server;
 	s=socket(AF_INET, SOCK_STREAM, 0);
 	if(s==-1){
@@ -15,18 +16,22 @@ int main(){
 	}
 
 	server.sin_family = AF_INET;
-	server.sin_port = 80;
+	server.sin_port = htons(80);
 	unsigned char * p;
 	p = (unsigned char*) &server.sin_addr.s_addr; //indirizzo IP
-	p[0] = 142;	// 142.251.209.14
-	p[1] = 251;
-	p[2] = 209;
-	p[3] = 14;
+	p[0] = 142;
+	p[1] = 250;
+	p[2] = 200;
+	p[3] = 142;
+
 	t = connect(s, (struct sockaddr *) &server, sizeof(struct sockaddr_in));
 	write(s, "GET /\r\n",7);
-	int numero_byte = read(s, response, 999);	// al massimo 999
-	response[numero_byte] = 0;	// terminatore
-	printf("s = %d\n", s);	
-	printf(response);
+
+	for(i=0; t=read(s, response+i, 99999-i); i+=t)
+		printf("t=%d\n",t);
+
+	response[i] = 0;	// terminatore
+	printf("s = %d\n\n", s);	
+	printf("%s\n\n",response);
 }
 
