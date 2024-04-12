@@ -7,7 +7,8 @@ int main(){
 	int s;
 	int t;
 	int i;
-	char response[100000];
+	int max_response_size = 100000;
+	char response[max_response_size];
 	struct sockaddr_in server;
 	s=socket(AF_INET, SOCK_STREAM, 0);
 	if(s==-1){
@@ -27,11 +28,12 @@ int main(){
 	t = connect(s, (struct sockaddr *) &server, sizeof(struct sockaddr_in));
 	write(s, "GET /\r\n",7);
 
-	for(i=0; t=read(s, response+i, 99999-i); i+=t)
+	for(i=0; t=read(s, response+i, max_response_size-1-i); i+=t)
 		printf("t=%d\n",t);
 
 	response[i] = 0;	// terminatore
 	printf("s = %d\n\n", s);	
 	printf("%s\n\n",response);
 }
+
 

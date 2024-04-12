@@ -1,8 +1,18 @@
 #include <stdio.h>
 #include <stdint.h>
 
-int main1()
+
+
+void foo(){
+	static int bar = 17;
+	bar+=1;
+	printf("%d ",bar);
+}
+
+int main()
 {
+ 
+/*
     short int c; // occupa due byte
     short int *p = &c;
     c = 65;
@@ -13,5 +23,12 @@ int main1()
     printf("%c\n", c);  // Z
     *(p + 1) = 0x20;
     return 0;
-}
+*/
 
+	static int bar = 30;
+	foo();
+	foo();
+	foo();
+	foo();
+	foo();
+    }
