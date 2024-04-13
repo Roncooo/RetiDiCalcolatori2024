@@ -1,5 +1,6 @@
 /*
- * Come fare un Web client?
+ * Come fare un Web client con il protocollo 1.1?
+ *
  * 1) Creare un socket (man 2 socket)
  *	int socket(int domain, int type, int protocol);
  *	domain = AF_INET
@@ -20,24 +21,22 @@
 	per trovare l'ip usiamo nslookup www.google.com
  * 3) Usare write per fare una richiesta 
  * 	write(s, request, strlen(request));
- * 	request:
- * 		http/0.9: "GET /\r\n"
- * 		http/1.0:
- * 		http/1.1:	
+ * 	request http/1.1 =  "GET / HTTP/1.1\r\n\r\n"
  *
+ * La differenza principale rispetto ai protocolli 0.9 e 1.0 è che 
+ * con l'1.1 la connessione non termina quando termina il file
+ * Quindi cambia la tecnica per la lettura: 
  * 4) Usare read per leggere una risposta
  *	Occorre fare un ciclo
  *	for(i=0; current_length=read(s, response+i, max_length-i); i+=current_length){}
- *
- *
  */
 
-#include <stdio.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/ip.h>
-#include <unistd.h>
-#include <string.h>
+#include <stdio.h>	// printf
+#include <sys/types.h>	// socket, connect
+#include <sys/socket.h>	// socket, connect
+#include <netinet/ip.h> // sockaddr_in
+#include <unistd.h> 	// write, read
+#include <string.h>	// strlen
 
 int main(){
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -55,19 +54,23 @@ int main(){
 	ip[3] = 36;
 	int c = connect(s, addr, sizeof(addr_in));
 	
-	char * request = "GET /\r\n";
-	write(s, request, strlen(request));
+	char * request1_1 = "GET / HTTP/1.1\r\n\r\n";
+	write(s, request1_0, strlen(request1_0));
 
-	int max_length = 60000;
-	char response[max_length];
+	int max_response_length = 60000;
+	char response[max_response_length];
 	int current_length;
 	int i;
-	for(i=0; current_length=read(s, response+i, max_length-i); i+=current_length){
-		printf("Current_lenght: %d\n", current_length);
-	}
-	printf("Total_length: %d\n", i);
+	for(i=0; current_length=read(s, response+i, max_response_length-i); i+=current_length){
+		// printf("Current_lenght: %d\n", current_length);
+		
+		// parsing
 
-	response[max_length-1] = 0;
+	
+	}
+	// printf("Total_length: %d\n", i);
+
+	response[max_response_length-1] = 0;
 	printf("%s\n", response);
 }
 

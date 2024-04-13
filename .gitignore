@@ -5,3 +5,6 @@
 !*.html
 !*.txt
 !*.pdf
+!*.cpp
+!*.py
+!*.java
