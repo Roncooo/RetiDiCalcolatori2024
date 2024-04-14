@@ -24,8 +24,26 @@
  * 	request http/1.1 =  "GET / HTTP/1.1\r\n\r\n"
  *
  * La differenza principale rispetto ai protocolli 0.9 e 1.0 è che 
- * con l'1.1 la connessione non termina quando termina il file
- * Quindi cambia la tecnica per la lettura: 
+ * con l'1.1 la connessione non termina quando termina il file.
+ * Per ottenere un comportamento come in http0.9 e 1.0 potrei fare questa request
+ * 	GET / HTTP/1.1\r\nConnection: close\r\n\r\n
+ * 	Ma non avrebbe più senso l'1.1
+ *
+ * Quindi cambia la tecnica per la lettura. Se faccio come ho fatto per
+ * http0.9 e 1.0 funziona tutto ma si blocca dopo aver finito la lettura
+ * perché non è terminata la connessione. Aspettando un un bel po', la connessione
+ * viene terminata automaticamente e quindi si può vedere la response.
+ * Notiamo che la response contiene
+ *  - HTTP/1.1 200 OK
+ *  - un po' di header che per il momento non ci interessano
+ *  - Transfer-Encoding: chunked
+ *  - una linea vuota (un'altro CRLF)
+ *  - dimensione del chunk inviato: 4ea8
+ *  - chunk di entity body
+ *  - nuova dimensione
+ *  - nuovo chunk e via così finché la nuova dimensione è 0 
+ *
+ * 
  * 4) Usare read per leggere una risposta
  *	Occorre fare un ciclo
  *	for(i=0; current_length=read(s, response+i, max_length-i); i+=current_length){}
@@ -55,7 +73,7 @@ int main(){
 	int c = connect(s, addr, sizeof(addr_in));
 	
 	char * request1_1 = "GET / HTTP/1.1\r\n\r\n";
-	write(s, request1_0, strlen(request1_0));
+	write(s, request1_1, strlen(request1_1));
 
 	int max_response_length = 60000;
 	char response[max_response_length];
