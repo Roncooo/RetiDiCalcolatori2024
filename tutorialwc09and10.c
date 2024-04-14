@@ -25,7 +25,8 @@
  * 	request:
  * 		http/0.9: "GET /\r\n"
  * 		http/1.0: "GET / HTTP/1.0\r\n\r\n"
- *
+ *    Se si verifica un errore (ad esempio chiedo la pagina /ppp e quindi ottengo 404)
+ *    Tra gli header c'è anche il parametro Content-length
  * 4) Usare read per leggere una risposta
  *	Occorre fare un ciclo
  *	for(i=0; current_length=read(s, response+i, max_length-i); i+=current_length){}

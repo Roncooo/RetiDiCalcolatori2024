@@ -56,6 +56,18 @@
 #include <unistd.h> 	// write, read
 #include <string.h>	// strlen
 
+
+struct header{
+	char* n;	// name
+	char* v;	// value 
+} h[100];		// creating an array
+
+#define max_response_length 60000
+char response[max_response_length];
+
+#define max_header_length 10000
+char header_buffer[max_header_length];
+
 int main(){
 	int s = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 	// printf("%d",s);
@@ -75,18 +87,38 @@ int main(){
 	char * request1_1 = "GET / HTTP/1.1\r\n\r\n";
 	write(s, request1_1, strlen(request1_1));
 
-	int max_response_length = 60000;
-	char response[max_response_length];
 	int current_length;
-	int i;
-	for(i=0; current_length=read(s, response+i, max_response_length-i); i+=current_length){
-		// printf("Current_lenght: %d\n", current_length);
-		
-		// parsing
 
-	
+	// PARSING DEGLI HEADER fatto durante la lettura per risparmiare tempo
+	// leggiamo un char alla volta
+	int i;	// scorre i caratteri
+	int j;	// conta gli header
+	char * statusline=h[0].n=response;	// status line
+	for(i=0, j=0; read(s, response+i, 1); i++){
+		// se trovo CRLF vuol dire che subito dopo inizia un nuovo header
+		if(response[i-1]=="\r" && response[i]=="\n"){
+			j++;
+			h[j].n = &response[i+1];	// segno l'inizio di un nuovo header
+			response[i-1]=0;			// terminatore del precedente h.v
+			// se il precedente header è vuoto, ho finito
+			if(h[j-1].n[0]==0)
+				break;
+
+		}	
+		
+		// se sono arrivato a : e
+		// non ho ancora segnato l'inizio del valore (che di default è 0)
+		if((response[i]==":") && (!h[j].n)){	
+			h[j].v = response+i;
+			response[i]=0;	// terminatore del nome dell'header
+		}
+
 	}
-	// printf("Total_length: %d\n", i);
+	
+	
+	// close(s);
+
+	// leggere l'entity body usando l'informazione sulla lunghezza
 
 	response[max_response_length-1] = 0;
 	printf("%s\n", response);
