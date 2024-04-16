@@ -101,8 +101,10 @@ int main(){
 			h[j].n = &response[i+1];	// segno l'inizio di un nuovo header
 			response[i-1]=0;			// terminatore del precedente h.v
 			// se il precedente header è vuoto, ho finito
-			if(h[j-1].n[0]==0)
+			if(h[j-1].n[0]==0){
+					close(s);
 				break;
+			}
 
 		}	
 		
