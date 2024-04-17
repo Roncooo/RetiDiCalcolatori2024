@@ -43,28 +43,28 @@ int main()
 
 	while(1){
 
-			int len = sizeof(struct sockaddr);
-			s2 = accept(s, (struct sockadd *)&remote, &len); // passiamo tutto per riferimento perché accept deve modificarla
-			if (s2 == -1)
-			{
-				perror("Accept fallita");
-				return 1;
-			}
+		int len = sizeof(struct sockaddr);
+		s2 = accept(s, (struct sockadd *)&remote, &len); // passiamo tutto per riferimento perché accept deve modificarla
+		if (s2 == -1)
+		{
+			perror("Accept fallita");
+			return 1;
+		}
 
-			// ora possiamo leggere la richiesta
-			t = read(s2, request, 3000);
-			if (t == -1)
-			{
-				perror("Read fallita");
-				return 1;
-			}
-			request[t] = 0;
-			printf("Richiesta %s\n", request);
+		// ora possiamo leggere la richiesta
+		t = read(s2, request, 3000);
+		if (t == -1)
+		{
+			perror("Read fallita");
+			return 1;
+		}
+		request[t] = 0;
+		printf("Richiesta %s\n", request);
 
-			// ora possiamo rispondere (full response)
-			sprintf(response, "HTTP/1.1 200 OK\r\nConnect:close\n\n<html><h1>Funziono!</h1>");
-			write(s2, response, strlen(response));
-			close(s2);
+		// ora possiamo rispondere (full response)
+		sprintf(response, "HTTP/1.1 200 OK\r\nConnect:close\n\n<html><h1>Funziono!</h1>");
+		write(s2, response, strlen(response));
+		close(s2);
 
 	}
 }
